@@ -1,0 +1,11 @@
+# Thunderstore 打包产物：由 dll / icon.png / manifest.json / README.md 现场打包生成，
+# 每次重打内容都会变。发布走 Thunderstore，不靠仓库分发 zip。
+*.zip
+*.7z
+*.7z.*
+
+# 本地临时文件
+*.tmp
+*.bak
+Thumbs.db
+.DS_Store

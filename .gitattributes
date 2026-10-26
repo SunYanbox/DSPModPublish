@@ -1,0 +1,24 @@
+# 默认交给 Git 自动判断文本/二进制
+* text=auto
+
+# ---- 文本 ----
+# 显式声明，避免以后加了文件却按系统换行乱跳。
+*.md           text
+*.json         text eol=lf
+*.gitattributes text
+*.gitignore    text
+
+# ---- 二进制 ----
+# binary = -diff -merge -text：不做行尾转换，也不按文本合并/生成 diff。
+# DLL、PNG 一旦被当成文本，CRLF 转换会直接改坏字节。
+*.dll  binary
+*.png  binary
+
+# 其它不该走文本管道的格式，顺手写上，避免以后误加
+*.exe  binary
+*.pdb  binary
+*.ico  binary
+*.jpg  binary
+*.jpeg binary
+*.zip  binary
+*.7z   binary
