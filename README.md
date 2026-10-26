@@ -105,7 +105,7 @@ BepInEx 日志：    BepInEx/LogOutput.log（整份贴，别只贴最后一行�
    > 别图省事写 `.\DSPEasy.Framework\*`——目录里已经有上一版的 zip，会被一起打进包里。
 
 4. 上传 zip 到 Thunderstore，确认依赖能正确解析。
-5. 提交 git（zip 不入库），建议打 tag：`framework-0.2.31` / `buildings-0.2.31`。
+5. 提交 git（zip 不入库），打 tag 示例：`Framework-0.2.31` / `Buildings-0.2.31`。
 
 ## Git 约定
 
