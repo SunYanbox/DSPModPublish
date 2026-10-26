@@ -1,7 +1,7 @@
 {
     "name": "DSPEasy_Framework",
-    "version_number": "0.2.30",
-    "website_url": "",
+    "version_number": "0.2.31",
+    "website_url": "https://github.com/SunYanbox/DSPModPublish",
     "description": "DSPEasy 系列模组共用的框架：按命名空间隔离的旁车存档、面板基座、配方求解等。本身不含玩法，只有其它 DSPEasy 模组依赖它时才需要安装。",
     "dependencies": [
         "xiaoye97-BepInEx-5.4.17"

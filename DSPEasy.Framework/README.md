@@ -4,6 +4,8 @@ Dyson Sphere Program（戴森球计划）**DSPEasy 系列模组**共用的框架
 
 > **这个包本身不提供任何玩法功能。** 只有当你安装的其它模组（例如 `DSPEasy Buildings`、`DSPEasy Exchange`）
 > 依赖它时，或者你要基于它做开发时，才需要安装。
+> 
+> 汇报问题(Bug/Issue)：[github](https://github.com/SunYanbox/DSPModPublish/issues)
 
 ---
 
