@@ -4,8 +4,8 @@
 
 | 包 | 做什么 | 当前版本 | 依赖 |
 | --- | --- | --- | --- |
-| [DSPEasy Framework](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Framework/) | 其它 DSPEasy 模组共用的框架：按命名空间隔离的旁车存档、面板基座、配方求解等。本身不含玩法 | `0.2.31` | BepInEx 5.4.17 |
-| [DSPEasy Buildings](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Buildings/) | 11 座独立于原版的超级建筑：采矿机、制造机、充电桩、发电机、炮台、传送带、分拣器、研究站、黑箱超市、电磁-火箭发射器、太空防卫站 | `0.2.31` | BepInEx 5.4.17 + DSPEasy Framework |
+| [DSPEasy Framework](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Framework/) | 其它 DSPEasy 模组共用的框架：按命名空间隔离的旁车存档、面板基座、配方求解等。本身不含玩法 | `0.2.32` | BepInEx 5.4.17 |
+| [DSPEasy Buildings](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Buildings/) | 11 座独立于原版的超级建筑：采矿机、制造机、充电桩、发电机、炮台、传送带、分拣器、研究站、黑箱超市、电磁-火箭发射器、太空防卫站 | `0.2.33` | BepInEx 5.4.17 + DSPEasy Framework |
 
 > **这不是源码仓库。** 模组本体闭源，这里只放**发布用的包文件**（DLL、图标、manifest、包页 README）和**问题反馈入口**。
 
@@ -92,7 +92,7 @@ BepInEx 日志：    BepInEx/LogOutput.log（整份贴，别只贴最后一行�
 
 ### 步骤
 
-1. 改该包 `manifest.json` 的 `version_number`，同步更新包内 `README.md` 的「更新日志」。
+1. 改该包 `manifest.json` 的 `version_number`，同步更新包内 `CHANGELOG.md`（包页 README 不再单独放更新日志）。
 2. 如果 Framework 升版：把 `DSPEasy.Buildings/manifest.json` 里的 `Suntion-DSPEasy_Framework-x.y.z` 改成新版本，两个包一起发（先 Framework，后 Buildings）。
 3. 重新打包：
 
@@ -105,7 +105,7 @@ BepInEx 日志：    BepInEx/LogOutput.log（整份贴，别只贴最后一行�
    > 别图省事写 `.\DSPEasy.Framework\*`——目录里已经有上一版的 zip，会被一起打进包里。
 
 4. 上传 zip 到 Thunderstore，确认依赖能正确解析。
-5. 提交 git（zip 不入库），打 tag 示例：`Framework-0.2.31` / `Buildings-0.2.31`。
+5. 提交 git（zip 不入库），打 tag 示例：`Framework-0.2.32+Buildings-0.2.33`。
 
 ## Git 约定
 

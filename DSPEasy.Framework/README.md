@@ -14,7 +14,7 @@ Dyson Sphere Program（戴森球计划）**DSPEasy 系列模组**共用的框架
 | 模块 | 能力 |
 | --- | --- |
 | `DSPEasy.Framework.Save` | **命名空间旁车存档**：在存档旁边写一个 `.mod.dat`，数据块按 `命名空间/块ID` 分区，一个模组的数据不会踩到另一个模组；原子写入（先写 `.tmp` 再替换），文件格式 2，可读旧格式 1 并自动升级。 |
-| `DSPEasy.Framework.UI` | **面板基座**：`UiFactory` 提供文本 / 按钮 / 滑条的工厂方法与配色；`UiDrag` 处理窗口拖动；`UiFocus` 处理层级——只在打开时提层一次，不会像每帧抢置顶那样把游戏的物品提示条压掉。 |
+| `DSPEasy.Framework.UI` | **面板基座**：`UiFactory` 提供文本 / 按钮 / 滑条的工厂方法与配色；`UiDrag` 处理窗口拖动（轮询式，口径同原版 `UIWindowDrag`）；`UiFocus` 处理层级——只在打开时提层一次，不会像每帧抢置顶那样把游戏的物品提示条压掉。 |
 | `DSPEasy.Framework.Recipes` | `RecipeSolver`：配方树递归展开，带环检测与深度上限，用于「需要哪些材料」这类计算。 |
 | `DSPEasy.Framework.Items` | 物品栈辅助。 |
 | `DSPEasy.Framework.Blueprint` | 模组之间的蓝图数据通道。 |
