@@ -1,5 +1,8 @@
 ## 更新日志
 
+### 0.2.33
+- 内部重构：拆分 `ModSave` 旁车读写源文件，**公开 API、旁车存档格式与运行时行为不变**。
+
 ### 0.2.32
 - 面板拖动改为轮询式：`UiDrag` 按鼠标左键逐帧推动窗口，命中判定用画布的 `eventCamera`，口径对齐原版 `UIWindowDrag`；修掉 Screen Space - Camera 画布下「点不中、拖不动」。
 - 新增 `UiFactory.CanvasCamera`：按画布渲染模式返回正确的换算相机（Overlay 为 `null`，其它用画布相机），避免 `RectTransformUtility` 命中算偏。

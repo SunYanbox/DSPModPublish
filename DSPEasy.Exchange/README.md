@@ -18,7 +18,7 @@
 - 单位是 **milli-EMC**（1000 = 1 EMC），面板显示三位小数，例如铁矿 0.10 EMC、结构矩阵 3.265 EMC。
 - 27 项原始资源有基价，其余物品按配方推导：原料价总和 ÷ 产出总数（多产出按总数均摊），取所有可行配方里最便宜的一条；非产出型配方（对撞机、裂解等）也参与推导。
 - 几条参考价：临界光子 55.2 EMC、反物质 27.6 EMC、反物质燃料棒 169.29 EMC、宇宙矩阵 49.83 EMC、蓄电器 4.14 EMC。
-- 想改价：打开 `BepInEx/config/DSPEasyExchange/pricing.csv`，改「基价(milli)」列后重启游戏（清空 = 交给推导，填 `0` = 免费）；`[定价] 基价倍率` 可以整体缩放。
+- 想改价：打开 `BepInEx/config/DSPEasy.Exchange/pricing.csv`，改「基价(milli)」列后重启游戏（清空 = 交给推导，填 `0` = 免费）；`[定价] 基价倍率` 可以整体缩放。
 
 ## 存档
 
@@ -34,9 +34,9 @@
 
 1. 装 **BepInEx 5.4.17（x64，Mono）**，进一次游戏确认 `BepInEx/plugins` 已生成（本包不含游戏本体与 BepInEx）。
 2. 装 **DSPEasy Framework**（本模组的依赖，模组管理器会自动装上）。
-3. 把 `DSPEasyExchange.dll` 放进 `BepInEx/plugins/`（用 mod 管理器则自动处理）。启动后控制台出现 `Loading [DSPEasy.Exchange 0.5.3]` 即加载成功。
+3. 把 `DSPEasy.Exchange.dll` 放进 `BepInEx/plugins/`（用 mod 管理器则自动处理）。启动后控制台出现 `Loading [DSPEasy.Exchange 0.5.4]` 即加载成功。
 
-要求的框架版本：`DSPEasy_Framework 0.2.32`。框架由所有 DSPEasy 模组共用，**只允许存在一份**，若之前手动装过旧版，请把那套旧文件删掉。
+要求的框架版本：`DSPEasy_Framework 0.2.33`。框架由所有 DSPEasy 模组共用，**只允许存在一份**，若之前手动装过旧版，请把那套旧文件删掉。
 
 ## 配置项（`BepInEx/config/DSPEasy.Exchange.cfg`）
 

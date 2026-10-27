@@ -1,5 +1,11 @@
 ## 更新日志
 
+### 0.5.4
+- 内部重构：拆分超长面板与定价源文件，交易、定价、热键与存档格式不变。
+- 依赖 Framework 升到 `0.2.33`(>=0.2.32即可，只是`manifest.json`必须指定单独版本)；安装时可选同时更新 `DSPEasy.Framework`。
+
+**兼容性**：兼容旧版(<=0.5.3)的存档和配置。不兼容旧版 DLL 名称（出现冲突需要删除`DSPEasyExchange.dll`）。
+
 ### 0.5.3
 - 插件 GUID 与显示名改为 `DSPEasy.Exchange`（原 `DSPMod.easyexchange`）：日志来源前缀变成 `[Info   :DSPEasy.Exchange]`，启动横幅是 `Loading [DSPEasy.Exchange 0.5.3]`，Harmony 实例 id 同步改名。
 - **配置文件改名**：现在是 `BepInEx/config/DSPEasy.Exchange.cfg`（按插件 GUID 命名）。旧的 `DSPMod.easyexchange.cfg` 不再读取，热键 / 基价倍率 / 交易日志会回到默认值；想保留原来的设置，把旧文件重命名为 `DSPEasy.Exchange.cfg` 即可（配置键名没变）。
