@@ -75,49 +75,6 @@ BepInEx 日志：    BepInEx/LogOutput.log（整份贴，别只贴最后一行�
 - Buildings 与 Exchange 的设置各写在自己的旁车块（`DSPEasyBuildings` 命名空间 vs `EMC1`），同装互不覆盖；Exchange 只读原版物品 / 配方表，不改原版数值。
 - Buildings 默认占用 `11500`–`11510` 物品段与科技 `1999`，撞号时可在 `BepInEx/config/DSPEasy.Buildings.cfg` 里改；配方 ID 自动找空位，冲突时请发日志。配方另可在同文件 `[游玩模式] 方案` 里选 `0`–`6`（默认 `5`）。
 
-## 发布流程（维护者）
-
-### 包内文件
-
-每个包目录就这几样，打包时全部放在 zip 的**根目录**（不能套一层文件夹）：
-
-| 文件 | 说明 |
-| --- | --- |
-| `manifest.json` | Thunderstore 元数据：`name` / `version_number` / `website_url` / `description` / `dependencies` |
-| `icon.png` | 256×256 PNG |
-| `README.md` | Thunderstore 包页正文 |
-| `CHANGELOG.md` | 包页「更新日志」标签的内容；不要在 README 里再写一份 |
-| `*.dll` | 插件本体 |
-
-两条硬规则：
-
-- `name` 不要随便改——改名等于新包，订阅、依赖字符串、下载量都会断。
-- `version_number` 是 `x.y.z` 语义化版本，**同一版本号不能重复上传**，改完必须升版本。
-
-### 步骤
-
-1. 改该包 `manifest.json` 的 `version_number`，同步更新包内 `CHANGELOG.md`（包页 README 不再单独放更新日志）。
-2. 如果 Framework 升版：把 `DSPEasy.Buildings` 与 `DSPEasy.Exchange` 的 `manifest.json` 里的 `Suntion-DSPEasy_Framework-x.y.z` 改成新版本，三个包一起发（先 Framework，后两个玩法包）。
-3. 重新打包（版本号各包独立，改了哪个就重打哪个）：
-
-   ```powershell
-   Compress-Archive -Path .\DSPEasy.Framework\DSPEasy.Framework.dll, .\DSPEasy.Framework\icon.png, .\DSPEasy.Framework\manifest.json, .\DSPEasy.Framework\README.md, .\DSPEasy.Framework\CHANGELOG.md -DestinationPath .\DSPEasy.Framework\DSPEasy.Framework.zip -Force
-
-   Compress-Archive -Path .\DSPEasy.Buildings\DSPEasy.Buildings.dll, .\DSPEasy.Buildings\icon.png, .\DSPEasy.Buildings\manifest.json, .\DSPEasy.Buildings\README.md, .\DSPEasy.Buildings\CHANGELOG.md -DestinationPath .\DSPEasy.Buildings\DSPEasy.Buildings.zip -Force
-
-   Compress-Archive -Path .\DSPEasy.Exchange\DSPEasy.Exchange.dll, .\DSPEasy.Exchange\icon.png, .\DSPEasy.Exchange\manifest.json, .\DSPEasy.Exchange\README.md, .\DSPEasy.Exchange\CHANGELOG.md -DestinationPath .\DSPEasy.Exchange\DSPEasy.Exchange.zip -Force
-   ```
-
-   > 别图省事写 `.\DSPEasy.Framework\*`——目录里已经有上一版的 zip，会被一起打进包里。
-
-4. 上传 zip 到 Thunderstore，确认依赖能正确解析。
-5. 提交 git（zip 不入库），打 tag 示例：`Framework-0.2.33+Buildings-0.2.35+Exchange-0.5.4`（只发一个包时只带它自己的版本）。
-
-## Git 约定
-
-- **`*.dll`、`*.png` 标为 binary**（`.gitattributes`）。这两个格式一旦被 Git 当文本处理，Windows 上的 CRLF 转换会直接改坏字节，diff 也没有意义。
-- **`*.zip`、`*.7z` 不入库**（`.gitignore`）。包是 DLL + 图标 + manifest + README 现场打出来的，每次重打内容都会变，进 git 只会制造噪音；发布走 Thunderstore，不靠仓库分发。
-
 ## 许可
 
 仓库内的文档、manifest、打包配置按 **MPL-2.0** 发布，见 [LICENSE](LICENSE)。模组本体为闭源分发，仅提供编译后的 DLL，源代码不在本仓库。
