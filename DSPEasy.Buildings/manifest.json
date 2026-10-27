@@ -1,6 +1,6 @@
 {
     "name": "DSPEasy_Buildings",
-    "version_number": "0.2.33",
+    "version_number": "0.2.34",
     "website_url": "https://github.com/SunYanbox/DSPModPublish",
     "description": "11 座独立于原版的超级建筑：采矿机、制造机、远程充电桩、发电机、炮台、传送带、分拣器、研究站、黑箱超市、电磁-火箭发射器、太空防卫站。需要 DSPEasy_Framework。",
     "dependencies": [

@@ -5,8 +5,8 @@
 | 包 | 做什么 | 当前版本 | 依赖 |
 | --- | --- | --- | --- |
 | [DSPEasy Framework](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Framework/) | 其它 DSPEasy 模组共用的框架：按命名空间隔离的旁车存档、面板基座、配方求解等。本身不含玩法 | `0.2.32` | BepInEx 5.4.17 |
-| [DSPEasy Buildings](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Buildings/) | 11 座独立于原版的超级建筑：采矿机、制造机、充电桩、发电机、炮台、传送带、分拣器、研究站、黑箱超市、电磁-火箭发射器、太空防卫站 | `0.2.33` | BepInEx 5.4.17 + DSPEasy Framework |
-| [DSPEasy Exchange](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Exchange/) | EMC 交易面板：卖物品换 EMC、用 EMC 买已解锁物品；全物品按资源基价 + 配方推导定价，账户与解锁随存档保存 | `0.5.2` | BepInEx 5.4.17 + DSPEasy Framework |
+| [DSPEasy Buildings](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Buildings/) | 11 座独立于原版的超级建筑：采矿机、制造机、充电桩、发电机、炮台、传送带、分拣器、研究站、黑箱超市、电磁-火箭发射器、太空防卫站 | `0.2.34` | BepInEx 5.4.17 + DSPEasy Framework |
+| [DSPEasy Exchange](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Exchange/) | EMC 交易面板：卖物品换 EMC、用 EMC 买已解锁物品；全物品按资源基价 + 配方推导定价，账户与解锁随存档保存 | `0.5.3` | BepInEx 5.4.17 + DSPEasy Framework |
 
 > **这不是源码仓库。** 模组本体闭源，这里只放**发布用的包文件**（DLL、图标、manifest、包页 README）和**问题反馈入口**。
 
@@ -32,7 +32,7 @@
    BepInEx/plugins/DSPEasy_Exchange/DSPEasyExchange.dll
    ```
 
-3. 启动游戏，打开 `BepInEx/LogOutput.log`，能看到 `DSPEasy Buildings` 与 `DSPEasy Exchange`（按装了哪些算）两个插件加载成功、Framework 作为依赖被它们加载即可。
+3. 启动游戏，打开 `BepInEx/LogOutput.log`，能看到 `DSPEasy.Buildings` 与 `DSPEasy.Exchange`（按装了哪些算）两个插件加载成功、Framework 作为依赖被它们加载即可。
 
 > ⚠️ **`BepInEx/plugins/` 下只能有一份 `DSPEasy.Framework.dll`。**
 > BepInEx 会递归加载所有 DLL，每一份都会建立自己的静态注册表；有了两份，一份写进去的存档数据另一份读不到，表现就是「设置存了，重进游戏全没了」。升级时把旧副本删干净。
@@ -73,7 +73,7 @@ BepInEx 日志：    BepInEx/LogOutput.log（整份贴，别只贴最后一行�
 - 存档设置写在存档旁边的 `<存档名>.mod.dat` 里，**不进 `.dsv`**。备份或迁移存档时请把 `.dsv` 与 `.mod.dat` 成对复制。
 - 建筑设置会随原版蓝图一起保存；**对方没装本模组时粘贴蓝图会丢建筑或报错**，这是已知限制。
 - Buildings 与 Exchange 的设置各写在自己的旁车块（`DSPEasyBuildings` 命名空间 vs `EMC1`），同装互不覆盖；Exchange 只读原版物品 / 配方表，不改原版数值。
-- Buildings 只用 `11500`–`11510` 物品段，配方 ID 自动找空位；与其它新增物品的模组冲突时请发日志。
+- Buildings 默认占用 `11500`–`11510` 物品段与科技 `1999`，撞号时可在 `BepInEx/config/DSPEasy.Buildings.cfg` 里改；配方 ID 自动找空位，冲突时请发日志。
 
 ## 发布流程（维护者）
 
@@ -111,7 +111,7 @@ BepInEx 日志：    BepInEx/LogOutput.log（整份贴，别只贴最后一行�
    > 别图省事写 `.\DSPEasy.Framework\*`——目录里已经有上一版的 zip，会被一起打进包里。
 
 4. 上传 zip 到 Thunderstore，确认依赖能正确解析。
-5. 提交 git（zip 不入库），打 tag 示例：`Framework-0.2.32+Buildings-0.2.33+Exchange-0.5.2`（只发一个包时只带它自己的版本）。
+5. 提交 git（zip 不入库），打 tag 示例：`Framework-0.2.32+Buildings-0.2.34+Exchange-0.5.3`（只发一个包时只带它自己的版本）。
 
 ## Git 约定
 
