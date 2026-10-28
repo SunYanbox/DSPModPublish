@@ -1,5 +1,9 @@
 ## 更新日志
 
+### 0.5.5
+- 修复：物品选择框里除「物品」「建筑」之外多出来的页签没有按该页过滤，列表仍显示物品页的内容，与页签对不上。现在显示的内容与页签一致。
+- 增加对 [DSPEasy.Buildings-v0.2.36](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Buildings/v/0.2.36/) 独立页签功能的兼容。
+
 ### 0.5.4
 - 内部重构：拆分超长面板与定价源文件，交易、定价、热键与存档格式不变。
 - 依赖 Framework 升到 `0.2.33`(>=0.2.32即可，只是`manifest.json`必须指定单独版本)；安装时可选同时更新 `DSPEasy.Framework`。

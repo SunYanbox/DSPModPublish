@@ -1,6 +1,6 @@
 {
     "name": "DSPEasy_Exchange",
-    "version_number": "0.5.4",
+    "version_number": "0.5.5",
     "website_url": "https://github.com/SunYanbox/DSPModPublish",
     "description": "EMC 交易面板（等价交换）：卖物品换 EMC、用 EMC 买已解锁物品。全物品按资源基价 + 配方推导定价，余额与解锁随存档保存，交易会记入原版统计。需要 DSPEasy_Framework。",
     "dependencies": [
