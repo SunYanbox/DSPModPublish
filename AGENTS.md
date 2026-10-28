@@ -26,7 +26,18 @@
 
 1. 改该包 `manifest.json` 的 `version_number`，同步更新包内 `CHANGELOG.md`（包页 README 不再单独放更新日志）。
 2. 如果 Framework 升版：把 `DSPEasy.Buildings` 与 `DSPEasy.Exchange` 的 `manifest.json` 里的 `Suntion-DSPEasy_Framework-x.y.z` 改成新版本，三个包一起发（先 Framework，后两个玩法包）。
-3. 重新打包为 ZIP（版本号各包独立，改了哪个就重打哪个）：
+3. 打包并上传到 GitHub Release：Actions →「打包并发布 Release」→ Run workflow。
+
+   - 先在 Releases 页面新建一个**草稿** Release，把这次要发的 `*.dll` 全部拖进它的 assets。表单不能选文件，这个草稿 Release 就是 DLL 的上传区，工作流按 release id 走 API 取回。
+   - `projects` 填 `auto`（默认）就按 DLL 文件名自动对上包目录（`DSPEasy.Buildings.dll` → `DSPEasy.Buildings`）；也可以填 `all` 或直接写包目录名。名字对不上时用 `mapping` 逐行指定 `dll文件名=包目录名`。
+   - Release 的 tag 由各包 `manifest.json` 的 `version_number` 自动算出（如 `Framework-0.2.33+Buildings-0.2.36`）。tag 已存在会直接报错，不会悄悄覆盖。
+   - 第一次跑建议勾 `dry_run`，只打包不写 Release，看 Artifacts 和运行摘要；`publish` 取消勾选则上传后留作草稿。
+   - zip 里只有 `manifest.json` / `icon.png` / `README.md` / `CHANGELOG.md` / `*.dll`，全部在根目录。
+
+4. 从 Release 取同名 `.zip` 上传到 Thunderstore，确认依赖能正确解析。
+5. 提交 git（zip 不入库）。
+
+> 工作流不可用时才本地手动打包，注意别写 `.\DSPEasy.Framework\*`——目录里已有上一版 zip，会被一起打进包里：
 
    ```powershell
    Compress-Archive -Path .\DSPEasy.Framework\DSPEasy.Framework.dll, .\DSPEasy.Framework\icon.png, .\DSPEasy.Framework\manifest.json, .\DSPEasy.Framework\README.md, .\DSPEasy.Framework\CHANGELOG.md -DestinationPath .\DSPEasy.Framework\DSPEasy.Framework.zip -Force
@@ -35,8 +46,3 @@
 
    Compress-Archive -Path .\DSPEasy.Exchange\DSPEasy.Exchange.dll, .\DSPEasy.Exchange\icon.png, .\DSPEasy.Exchange\manifest.json, .\DSPEasy.Exchange\README.md, .\DSPEasy.Exchange\CHANGELOG.md -DestinationPath .\DSPEasy.Exchange\DSPEasy.Exchange.zip -Force
    ```
-
-   > 别图省事写 `.\DSPEasy.Framework\*`——目录里已经有上一版的 zip，会被一起打进包里。
-
-4. 上传 zip 到 Thunderstore，确认依赖能正确解析。
-5. 提交 git（zip 不入库）。
