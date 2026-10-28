@@ -34,7 +34,7 @@
 
 1. 装 **BepInEx 5.4.17（x64，Mono）**，进一次游戏确认 `BepInEx/plugins` 已生成（本包不含游戏本体与 BepInEx）。
 2. 装 **DSPEasy Framework**（本模组的依赖，模组管理器会自动装上）。
-3. 把 `DSPEasy.Exchange.dll` 放进 `BepInEx/plugins/`（用 mod 管理器则自动处理）。启动后控制台出现 `Loading [DSPEasy.Exchange 0.5.5]` 即加载成功。
+3. 把 `DSPEasy.Exchange.dll` 放进 `BepInEx/plugins/`（用 mod 管理器则自动处理）。启动后控制台出现 `Loading [DSPEasy.Exchange X.Y.Z]` 即加载成功。
 
 要求的框架版本：`DSPEasy_Framework 0.2.33`。框架由所有 DSPEasy 模组共用，**只允许存在一份**，若之前手动装过旧版，请把那套旧文件删掉。
 
