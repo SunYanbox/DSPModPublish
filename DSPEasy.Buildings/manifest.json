@@ -1,10 +1,10 @@
 {
     "name": "DSPEasy_Buildings",
-    "version_number": "0.2.36",
+    "version_number": "0.2.37",
     "website_url": "https://github.com/SunYanbox/DSPModPublish",
-    "description": "11 座独立于原版的超级建筑：采矿机、制造机、远程充电桩、发电机、炮台、传送带、分拣器、研究站、黑箱超市、电磁-火箭发射器、太空防卫站；物品与配方集中在选择器的「改版建筑」页与建造栏的「改版」类别里；支持 0-6 套可配置游玩模式配方（默认 5）。需要 DSPEasy_Framework。",
+    "description": "11 座独立于原版的超级建筑：采矿机、制造机、远程充电桩、发电机、炮台、传送带、分拣器、研究站、黑箱超市、电磁-火箭发射器、太空防卫站；物品与配方集中在选择器的「改版建筑」页与建造栏的「改版」类别里；支持 0-6 套可配置游玩模式配方（默认 5）；分析面板的性能测试页可查看各建筑耗时。需要 DSPEasy_Framework。",
     "dependencies": [
         "xiaoye97-BepInEx-5.4.17",
-        "Suntion-DSPEasy_Framework-0.2.33"
+        "Suntion-DSPEasy_Framework-0.2.34"
     ]
 }

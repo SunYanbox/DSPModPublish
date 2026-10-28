@@ -19,6 +19,7 @@ Dyson Sphere Program（戴森球计划）**DSPEasy 系列模组**共用的框架
 | `DSPEasy.Framework.Items` | 物品栈辅助。 |
 | `DSPEasy.Framework.Blueprint` | 模组之间的蓝图数据通道。 |
 | `DSPEasy.Framework.Abnormal` | 异常状态守卫：动工厂之前先确认游戏状态正常。 |
+| `DSPEasy.Framework.Diagnostics` | **性能面板统计**：在原版「分析面板 → 性能测试 → CPU」列表里给依赖本框架的模组追加三级耗时行（模组 → 建筑/功能 → 主要逻辑），面板关闭或不勾「实时检测」时不采样。 |
 
 ## 安装
 
@@ -50,7 +51,13 @@ ModSave.WriteForSaveName(saveName, "MyMod");
 var root = UiFactory.NewRect(transform, "MyPanel");
 UiFactory.Place(root, ...).Pos(...);
 UiFocus.BringToFront(root);   // 打开时提层一次即可，不要每帧抢置顶
+
+// 性能面板：注册模块与子步骤，Measure() 之外的时间不计入
+var module = ModProfiler.RegisterModule("模组 MyMod");
+var step = module.GetOrAddChild("我的步骤");
+using (step.Measure()) { /* 可能耗时的工作 */ }
+ModProfiler.Install(LogInfo, LogWarn);   // 安装面板补丁；多次调用只装一次
 ```
 
-- 命名空间：`DSPEasy.Framework.Save` / `.UI` / `.Recipes` / `.Items` / `.Blueprint` / `.Abnormal`。
+- 命名空间：`DSPEasy.Framework.Save` / `.UI` / `.Recipes` / `.Items` / `.Blueprint` / `.Abnormal` / `.Diagnostics`。
 - 依赖方向是单向的：框架只引用游戏的 `Assembly-CSharp` 与 BepInEx / 0Harmony，**不引用任何使用它的模组**。
