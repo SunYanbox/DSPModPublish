@@ -2,11 +2,11 @@
 
 给 **戴森球计划（Dyson Sphere Program）** 做的一组模组，发布在 Thunderstore：
 
-| 包 | 做什么 | 当前版本 | 依赖 |
-| --- | --- | --- | --- |
-| [DSPEasy Framework](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Framework/) | 其它 DSPEasy 模组共用的框架：按命名空间隔离的旁车存档、面板基座、配方求解等。本身不含玩法 | `0.2.33` | BepInEx 5.4.17 |
-| [DSPEasy Buildings](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Buildings/) | 11 座独立于原版的超级建筑：采矿机、制造机、充电桩、发电机、炮台、传送带、分拣器、研究站、黑箱超市、电磁-火箭发射器、太空防卫站；支持 0-6 套可配置游玩模式配方 | `0.2.35` | BepInEx 5.4.17 + DSPEasy Framework |
-| [DSPEasy Exchange](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Exchange/) | EMC 交易面板：卖物品换 EMC、用 EMC 买已解锁物品；全物品按资源基价 + 配方推导定价，账户与解锁随存档保存 | `0.5.4` | BepInEx 5.4.17 + DSPEasy Framework |
+| 包 | 做什么 | 依赖 |
+| --- | --- | --- |
+| [DSPEasy Framework](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Framework/) | 其它 DSPEasy 模组共用的框架：按命名空间隔离的旁车存档、面板基座、配方求解等。本身不含玩法 | BepInEx 5.4.17 |
+| [DSPEasy Buildings](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Buildings/) | 11 座独立于原版的超级建筑：采矿机、制造机、充电桩、发电机、炮台、传送带、分拣器、研究站、黑箱超市、电磁-火箭发射器、太空防卫站；物品与配方集中在「改版建筑」页与「改版」类别；支持 0-6 套可配置游玩模式配方 | BepInEx 5.4.17 + DSPEasy Framework |
+| [DSPEasy Exchange](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Exchange/) | EMC 交易面板：卖物品换 EMC、用 EMC 买已解锁物品；全物品按资源基价 + 配方推导定价，账户与解锁随存档保存 | BepInEx 5.4.17 + DSPEasy Framework |
 
 > **这不是源码仓库。** 模组本体闭源，这里只放**发布用的包文件**（DLL、图标、manifest、包页 README）和**问题反馈入口**。
 
