@@ -24,7 +24,7 @@ on:
         type: string
         default: ''
       source_release:
-        description: 'DLL 所在 Release 的 tag；留空 = 用最新创建的草稿 Release'
+        description: 'DLL 所在 Release 的 tag；留空 = 用最新创建的草稿 Release（草稿的 tag 只是占位，发布时会被改写）'
         type: string
         default: ''
       publish:

@@ -117,6 +117,8 @@ else {
     if ($drafts.Count -eq 0) {
         Fail '没有找到任何草稿 Release，也没有填 source_release。' @(
             '先在这个仓库的 Releases 页面新建一个草稿 Release，把这次的 DLL 拖进它的 assets，然后重新运行工作流。',
+            'GitHub 建 Release 必须给 tag，草稿的 tag 只是占位：在 tag 输入框里敲 draft（或 draft-1、draft-2），选「Create new tag: ... on publish」。',
+            '草稿不会真的创建 git tag，工作流发布时才把 tag 改写成算出来的名字。',
             "草稿 Release 地址：https://github.com/$repo/releases"
         )
     }

@@ -29,6 +29,7 @@
 3. 打包并上传到 GitHub Release：Actions →「打包并发布 Release」→ Run workflow。
 
    - 先在 Releases 页面新建一个**草稿** Release，把这次要发的 `*.dll` 全部拖进它的 assets。表单不能选文件，这个草稿 Release 就是 DLL 的上传区，工作流按 release id 走 API 取回。
+   - GitHub 建 Release 必须给 tag（API 的 `tag_name` 是必填，网页不填就报「tag name can't be blank」）。草稿的 tag 只是占位：在 tag 输入框里敲 `draft`，选「Create new tag: draft on publish」即可。占位名每次换一个（`draft-1`、`draft-2`…），免得两个草稿撞名。草稿不会真的创建 git tag，工作流发布时才把 tag 改写成算出来的名字。
    - `projects` 填 `auto`（默认）就按 DLL 文件名自动对上包目录（`DSPEasy.Buildings.dll` → `DSPEasy.Buildings`）；也可以填 `all` 或直接写包目录名。名字对不上时用 `mapping` 逐行指定 `dll文件名=包目录名`。
    - Release 的 tag 由各包 `manifest.json` 的 `version_number` 自动算出（如 `Framework-0.2.33+Buildings-0.2.36`）。tag 已存在会直接报错，不会悄悄覆盖。
    - 第一次跑建议勾 `dry_run`，只打包不写 Release，看 Artifacts 和运行摘要；`publish` 取消勾选则上传后留作草稿。
