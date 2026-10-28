@@ -1,4 +1,4 @@
-# 手动打包发布：从草稿 Release 取回 DLL → 按项目打成 zip → 上传回 Release。
+# 手动打包发布：从草稿 Release 取回 DLL → 按项目打成 zip → 上传回 Release → 传到 Thunderstore。
 #
 # 用法（在 Actions 页面点「Run workflow」）：
 #   1. 先在 Releases 页面新建一个草稿 Release，把这次要发的 n 个 DLL 拖进它的 assets；
@@ -6,6 +6,7 @@
 #   3. 首次建议勾 dry_run，只看 Artifacts 和 Summary，不写 Release。
 #
 # workflow_dispatch 的表单不能选文件，所以 DLL 的「上传区」是这个草稿 Release。
+# Thunderstore 的社区与各包分类在仓库根的 thunderstore.json，token 走 Secret THUNDERSTORE_TOKEN。
 
 name: 打包并发布 Release
 
@@ -42,6 +43,10 @@ on:
         description: '跳过「玩法包 pin 的 Framework 版本必须等于仓库 Framework 版本」的检查'
         type: boolean
         default: false
+      thunderstore:
+        description: '正式发布后依次把各 zip 传到 Thunderstore（需要仓库 Secret THUNDERSTORE_TOKEN；演练或留草稿时自动跳过）'
+        type: boolean
+        default: true
 
 permissions:
   contents: write
@@ -76,6 +81,7 @@ jobs:
           INPUT_DRY_RUN: ${{ inputs.dry_run }}
           INPUT_OVERWRITE: ${{ inputs.overwrite }}
           INPUT_SKIP_DEPENDENCY_CHECK: ${{ inputs.skip_dependency_check }}
+          INPUT_THUNDERSTORE: ${{ inputs.thunderstore }}
         run: pwsh -NoProfile -File .github/scripts/prepare.ps1
 
       - name: 上传暂存目录（DLL 与 plan.json）给后续 job
@@ -141,3 +147,32 @@ jobs:
 
       - name: 上传压缩包并改写 Release
         run: pwsh -NoProfile -File .github/scripts/publish.ps1
+
+  thunderstore:
+    name: 上传 Thunderstore
+    # Thunderstore 上的版本发布后撤不回来，所以草稿、演练一律不传：
+    # 只有「正式发布 Release」且勾选了 thunderstore 才进这个 job。
+    needs: [prepare, release]
+    if: ${{ inputs.thunderstore && !inputs.dry_run && inputs.publish }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 取回所有压缩包
+        uses: actions/download-artifact@v4
+        with:
+          pattern: pkg-*
+          path: .publish/dist
+          merge-multiple: true
+
+      - name: 取回暂存目录（plan.json）
+        uses: actions/download-artifact@v4
+        with:
+          name: staging
+          path: .publish/staging
+
+      - name: 逐个上传压缩包到 Thunderstore
+        env:
+          THUNDERSTORE_TOKEN: ${{ secrets.THUNDERSTORE_TOKEN }}
+        run: pwsh -NoProfile -File .github/scripts/thunderstore.ps1

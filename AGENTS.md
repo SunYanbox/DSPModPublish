@@ -34,7 +34,11 @@
    - 第一次跑建议勾 `dry_run`，只打包不写 Release，看 Artifacts 和运行摘要；`publish` 取消勾选则上传后留作草稿。
    - zip 里只有 `manifest.json` / `icon.png` / `README.md` / `CHANGELOG.md` / `*.dll`，全部在根目录。
 
-4. 从 Release 取同名 `.zip` 上传到 Thunderstore，确认依赖能正确解析。
+4. Thunderstore 上传：Release 正式发布后，工作流的「上传 Thunderstore」job 会把各 zip 挨个传上去（先 Framework 后玩法包）。
+
+   - 仓库 Secrets 里要有 `THUNDERSTORE_TOKEN`：thunderstore.io → 右上角头像 → Settings → Teams → 团队 → Service accounts 创建的 `tss_...` token（明文只显示一次）。
+   - 社区与各包分类写在仓库根的 `thunderstore.json`：`community` / `author_name` / `has_nsfw_content`，`packages` 下按包目录名给 `categories`（不选分类就写 `[]`）。分类 slug 写错会在准备阶段直接报错并列出可用分类。
+   - `dry_run` 或 `publish` 取消勾选时**不会**上传（Thunderstore 上的版本发布后撤不回来）。没勾 `thunderstore` 就手动从 Release 取同名 `.zip` 上传，确认依赖能正确解析。
 5. 提交 git（zip 不入库）。
 
 > 工作流不可用时才本地手动打包，注意别写 `.\DSPEasy.Framework\*`——目录里已有上一版 zip，会被一起打进包里：

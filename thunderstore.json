@@ -1,0 +1,16 @@
+{
+  "community": "dyson-sphere-program",
+  "author_name": "Suntion",
+  "has_nsfw_content": false,
+  "packages": {
+    "DSPEasy.Framework": {
+      "categories": ["libraries"]
+    },
+    "DSPEasy.Buildings": {
+      "categories": ["assembling-machines", "belts-and-sorters", "power"]
+    },
+    "DSPEasy.Exchange": {
+      "categories": ["quality-of-life", "resources"]
+    }
+  }
+}

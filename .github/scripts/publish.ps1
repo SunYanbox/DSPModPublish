@@ -217,7 +217,12 @@ Add-Summary -Lines $assetRows
 
 Add-Summary -Lines @(
     ''
-    '> 下一步：把同名的 `.zip` 传到 [Thunderstore](https://thunderstore.io/c/dyson-sphere-program/)，确认依赖能解析。'
+    $(if ($plan.thunderstore -and $plan.thunderstore.enabled) {
+            '> 下一步：紧随其后的「上传 Thunderstore」job 会把这些 zip 传上去，完成后确认依赖能正确解析。'
+        }
+        else {
+            '> 下一步：把同名的 `.zip` 传到 [Thunderstore](https://thunderstore.io/c/dyson-sphere-program/)，确认依赖能解析。'
+        })
 )
 
 Write-Host ''

@@ -9,7 +9,9 @@
     INPUT_PROJECTS              auto | all | "目录名,目录名"
     INPUT_MAPPING               "dll文件名=包目录名" 每行一条
     INPUT_SOURCE_RELEASE        源 Release 的 tag；留空取最新草稿
-    INPUT_DRY_RUN/INPUT_OVERWRITE/INPUT_PUBLISH/INPUT_SKIP_DEPENDENCY_CHECK
+    INPUT_DRY_RUN/INPUT_OVERWRITE/INPUT_PUBLISH/INPUT_SKIP_DEPENDENCY_CHECK/INPUT_THUNDERSTORE
+
+  Thunderstore 的社区与各包分类来自仓库根的 thunderstore.json（不放进 zip）。
 #>
 
 . (Join-Path $PSScriptRoot 'common.ps1')
@@ -31,6 +33,7 @@ $dryRun = $env:INPUT_DRY_RUN -eq 'true'
 $overwrite = $env:INPUT_OVERWRITE -eq 'true'
 $publish = $env:INPUT_PUBLISH -eq 'true'
 $skipDependencyCheck = $env:INPUT_SKIP_DEPENDENCY_CHECK -eq 'true'
+$thunderstore = $env:INPUT_THUNDERSTORE -eq 'true'
 
 $mode = if ($dryRun) { '演练（只打包，不写 Release）' }
 elseif (-not $publish) { '打包并保留草稿（待网页手动发布）' }
@@ -336,6 +339,67 @@ if ($missingDll.Count -gt 0) {
     )
 }
 
+# ---------------------------------------------------------------- Thunderstore 配置
+$tsConfig = $null
+$tsCategories = @{}
+if ($thunderstore) {
+    $configPath = Join-Path $root 'thunderstore.json'
+    if (-not (Test-Path -LiteralPath $configPath)) {
+        Fail '找不到仓库根目录的 thunderstore.json（上传 Thunderstore 需要它提供社区与各包的分类）。' @(
+            '补上这个文件，或取消勾选「上传到 Thunderstore」。'
+        )
+    }
+    try {
+        $tsConfig = Get-Content -LiteralPath $configPath -Raw -Encoding utf8 | ConvertFrom-Json
+    }
+    catch {
+        Fail "无法解析 thunderstore.json：$($_.Exception.Message)"
+    }
+
+    foreach ($key in 'community', 'author_name', 'has_nsfw_content', 'packages') {
+        if ($tsConfig.PSObject.Properties.Name -notcontains $key) { Fail "thunderstore.json 缺少字段：$key" }
+    }
+    if ([string]$tsConfig.community -notmatch '^[a-z0-9-]+$') {
+        Fail "thunderstore.json 的 community「$($tsConfig.community)」不像社区标识（例如 dyson-sphere-program）。"
+    }
+    if ([string]$tsConfig.author_name -notmatch '^[A-Za-z0-9_]+$') {
+        Fail "thunderstore.json 的 author_name「$($tsConfig.author_name)」不是 Thunderstore 团队名（只允许英文字母、数字、下划线）。"
+    }
+
+    # 用社区的分类列表校验拼写；接口拿不到时只警告，不挡打包
+    $knownCategories = @()
+    try {
+        $categoryResponse = Invoke-RestMethod -Uri "https://thunderstore.io/api/experimental/community/$($tsConfig.community)/category/" -TimeoutSec 30
+        $knownCategories = @($categoryResponse.results | ForEach-Object { [string]$_.slug })
+    }
+    catch {
+        $warnings.Add("拿不到 Thunderstore 社区 $($tsConfig.community) 的分类列表，跳过分类拼写校验：$($_.Exception.Message)")
+    }
+
+    foreach ($project in $selected) {
+        $entry = @($tsConfig.packages.PSObject.Properties | Where-Object { $_.Name -eq $project.DirName -or $_.Name -eq $project.Name }) | Select-Object -First 1
+        if (-not $entry) {
+            Fail "thunderstore.json 的 packages 里没有 $($project.DirName)。" @(
+                '给它加一条（"categories": [] 表示不选分类），或取消勾选「上传到 Thunderstore」。'
+            )
+        }
+
+        $categoriesProperty = $entry.Value.PSObject.Properties['categories']
+        if (-not $categoriesProperty) { Fail "thunderstore.json 里 $($entry.Name) 缺少 categories 字段（没有分类就写 []）。" }
+
+        $categories = @($categoriesProperty.Value | ForEach-Object { ([string]$_).Trim() } | Where-Object { $_ })
+        if ($knownCategories.Count -gt 0) {
+            $unknown = @($categories | Where-Object { $knownCategories -notcontains $_ })
+            if ($unknown.Count -gt 0) {
+                Fail "$($project.DirName) 的分类在社区 $($tsConfig.community) 里不存在：$($unknown -join '、')" @(
+                    "可用的分类：$($knownCategories -join '、')"
+                )
+            }
+        }
+        $tsCategories[$project.DirName] = $categories
+    }
+}
+
 # ---------------------------------------------------------------- 校验包内容
 function Assert-IconPng {
     param(
@@ -456,6 +520,7 @@ $packages = @(foreach ($project in $selected) {
             dlls         = @(foreach ($dll in $byProject[$project.DirName]) {
                     [pscustomobject]@{ name = $dll.Name; size = $dll.Size; sha256 = $dll.Sha256 }
                 })
+            categories   = if ($tsCategories.ContainsKey($project.DirName)) { @($tsCategories[$project.DirName]) } else { @() }
         }
     })
 
@@ -475,6 +540,12 @@ $plan = [ordered]@{
     sourceUrl            = $sourceUrl
     projectsInput        = $projectsInput
     warnings             = @($warnings)
+    thunderstore         = [ordered]@{
+        enabled        = $thunderstore
+        community      = if ($tsConfig) { [string]$tsConfig.community } else { '' }
+        authorName     = if ($tsConfig) { [string]$tsConfig.author_name } else { '' }
+        hasNsfwContent = if ($tsConfig) { [bool]$tsConfig.has_nsfw_content } else { $false }
+    }
     packages             = $packages
 }
 
@@ -499,6 +570,7 @@ $summary = @(
     "- 目标 tag：``$tag``"
     "- 模式：$mode"
     "- 覆盖已有资产：$(if ($overwrite) { '是' } else { '否' })"
+    "- 上传 Thunderstore：$(if ($thunderstore) { "是（$($tsConfig.community)）" } else { '否' })"
     ''
     '| 项目 | manifest name | 版本 | DLL |'
     '| --- | --- | --- | --- |'
@@ -506,6 +578,16 @@ $summary = @(
 foreach ($package in $packages) {
     $dllCell = (@($package.dlls | ForEach-Object { "``$($_.name)``" }) -join '<br>')
     $summary += "| $($package.project) | ``$($package.manifestName)`` | $($package.version) | $dllCell |"
+}
+
+if ($thunderstore) {
+    $summary += ''
+    $summary += '### Thunderstore 分类'
+    $summary += ''
+    foreach ($package in $packages) {
+        $categoryText = if (@($package.categories).Count -gt 0) { @($package.categories) -join '、' } else { '（不选分类）' }
+        $summary += "- $($package.project)：$categoryText"
+    }
 }
 
 if ($warnings.Count -gt 0) {
