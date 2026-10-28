@@ -10,3 +10,7 @@
 *.bak
 Thumbs.db
 .DS_Store
+
+# 「打包并发布 Release」工作流的临时工作目录（暂存 DLL、zip、plan.json）
+.publish/
+
