@@ -40,14 +40,7 @@
    - 仓库 Secrets 里要有 `THUNDERSTORE_TOKEN`：thunderstore.io → 右上角头像 → Settings → Teams → 团队 → Service accounts 创建的 `tss_...` token（明文只显示一次）。
    - 社区与各包分类写在仓库根的 `thunderstore.json`：`community` / `author_name` / `has_nsfw_content`，`packages` 下按包目录名给 `categories`（不选分类就写 `[]`）。分类 slug 写错会在准备阶段直接报错并列出可用分类。
    - `dry_run` 或 `publish` 取消勾选时**不会**上传（Thunderstore 上的版本发布后撤不回来）。没勾 `thunderstore` 就手动从 Release 取同名 `.zip` 上传，确认依赖能正确解析。
-5. 提交 git（zip 不入库）。
+5. 提交 git（只提交版本号与 CHANGELOG，zip 不入库）。
 
-> 工作流不可用时才本地手动打包，注意别写 `.\DSPEasy.Framework\*`——目录里已有上一版 zip，会被一起打进包里：
-
-   ```powershell
-   Compress-Archive -Path .\DSPEasy.Framework\DSPEasy.Framework.dll, .\DSPEasy.Framework\icon.png, .\DSPEasy.Framework\manifest.json, .\DSPEasy.Framework\README.md, .\DSPEasy.Framework\CHANGELOG.md -DestinationPath .\DSPEasy.Framework\DSPEasy.Framework.zip -Force
-
-   Compress-Archive -Path .\DSPEasy.Buildings\DSPEasy.Buildings.dll, .\DSPEasy.Buildings\icon.png, .\DSPEasy.Buildings\manifest.json, .\DSPEasy.Buildings\README.md, .\DSPEasy.Buildings\CHANGELOG.md -DestinationPath .\DSPEasy.Buildings\DSPEasy.Buildings.zip -Force
-
-   Compress-Archive -Path .\DSPEasy.Exchange\DSPEasy.Exchange.dll, .\DSPEasy.Exchange\icon.png, .\DSPEasy.Exchange\manifest.json, .\DSPEasy.Exchange\README.md, .\DSPEasy.Exchange\CHANGELOG.md -DestinationPath .\DSPEasy.Exchange\DSPEasy.Exchange.zip -Force
-   ```
+> 打包、算 tag、发 Release、传 Thunderstore 全在工作流里，本地不压 zip、也不手工上传。
+> 工作流见 `.github/workflows/publish-release.yml`，脚本在 `.github/scripts/`：`prepare.ps1`（取 DLL、校验、算 tag）→ `package.ps1`（打 zip）→ `publish.ps1`（传 Release）→ `thunderstore.ps1`（传 Thunderstore）。

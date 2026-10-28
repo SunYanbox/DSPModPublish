@@ -1,5 +1,5 @@
-# Thunderstore 打包产物：由 icon.png / manifest.json / README.md 现场打包生成，
-# 每次重打内容都会变。发布走 Thunderstore，不靠仓库分发 zip。
+# 打包产物：工作流每次现打 zip，直接传到 GitHub Release 与 Thunderstore，仓库里不存。
+# DLL 是构建输出，同样不入库。
 *.zip
 *.7z
 *.7z.*

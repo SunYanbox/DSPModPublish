@@ -13,7 +13,7 @@
 ## 这个仓库做什么
 
 1. **收 Issue** —— Bug、崩溃、兼容性问题、玩法建议，都提到本仓库的 **Issues** 标签页。
-2. **打包发布** —— 每个子目录就是一个 Thunderstore 包的内容，改完版本号重新打包、上传。
+2. **打包发布** —— 每个子目录就是一个 Thunderstore 包的内容；改完版本号后跑仓库的「打包并发布 Release」工作流，它会打 zip、发 GitHub Release 并自动传到 Thunderstore（流程见 [AGENTS.md](AGENTS.md)）。
 
 不在这里处理：游戏本体的 Bug、其它作者模组的问题、模组源码。
 
