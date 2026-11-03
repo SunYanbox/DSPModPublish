@@ -13,12 +13,12 @@ Dyson Sphere Program（戴森球计划）**DSPEasy 系列模组**共用的框架
 
 | 模块 | 能力 |
 | --- | --- |
-| `DSPEasy.Framework.Save` | **命名空间旁车存档**：在存档旁边写一个 `.mod.dat`，数据块按 `命名空间/块ID` 分区，一个模组的数据不会踩到另一个模组；原子写入（先写 `.tmp` 再替换），文件格式 2，可读旧格式 1 并自动升级。 |
-| `DSPEasy.Framework.UI` | **面板基座**：`UiFactory` 提供文本 / 按钮 / 滑条的工厂方法与配色；`UiDrag` 处理窗口拖动（轮询式，口径同原版 `UIWindowDrag`）；`UiFocus` 处理层级——只在打开时提层一次，不会像每帧抢置顶那样把游戏的物品提示条压掉。 |
+| `DSPEasy.Framework.Save` | **命名空间旁车存档**：在存档旁边写一个 `.mod.dat`，数据块按 `命名空间/块ID` 分区，一个模组的数据不会踩到另一个模组；原子写入（先写 `.tmp` 再替换），文件格式 2，可读旧格式 1 并自动升级。`SaveLifecycle` 把载入/写出/重置钩子统一成一份，多个模组各注册自己的命名空间；`ModSave.RegisterLegacyNamespace` 可把旧命名空间登记为别名，旧存档自动迁移。 |
+| `DSPEasy.Framework.UI` | **面板基座**：`PanelFrame` / `PanelHost` 提供统一样式的外壳（标题栏、贴边/居中锚点、拖动提示、关闭按钮）与显隐/层级接管；`UiFactory` 提供文本 / 按钮 / 滑条的工厂方法与配色；`UiDrag` 处理窗口拖动（轮询式，口径同原版 `UIWindowDrag`），`KeepOnScreen` 把窗口夹在画布可见范围内；`ItemPickerFilter` 统一物品选择器的白名单与页签过滤；`UiFocus` 处理层级——只在打开时提层一次，不会像每帧抢置顶那样把游戏的物品提示条压掉。 |
 | `DSPEasy.Framework.Recipes` | `RecipeSolver`：配方树递归展开，带环检测与深度上限，用于「需要哪些材料」这类计算。 |
 | `DSPEasy.Framework.Items` | 物品栈辅助。 |
-| `DSPEasy.Framework.Blueprint` | 模组之间的蓝图数据通道。 |
-| `DSPEasy.Framework.Abnormal` | 异常状态守卫：动工厂之前先确认游戏状态正常。 |
+| `DSPEasy.Framework.Blueprint` | 模组之间的蓝图数据通道：把建筑设置写进原版蓝图的 `content` 字符串并在粘贴时读回；`BlueprintChannel.Install()` 显式安装复制/粘贴补丁。 |
+| `DSPEasy.Framework.Abnormal` | 数据异常（`ABN_*`）守卫：`AbnormalityGuard.Install()` 拦截异常记录，并在载入/写出存档时清掉历史记录，避免模组改动原型后成就、元数据与银河上传被停用。 |
 | `DSPEasy.Framework.Diagnostics` | **性能面板统计**：在原版「分析面板 → 性能测试 → CPU」列表里给依赖本框架的模组追加三级耗时行（模组 → 建筑/功能 → 主要逻辑），面板关闭或不勾「实时检测」时不采样。 |
 
 ## 安装
@@ -51,6 +51,17 @@ ModSave.WriteForSaveName(saveName, "MyMod");
 var root = UiFactory.NewRect(transform, "MyPanel");
 UiFactory.Place(root, ...).Pos(...);
 UiFocus.BringToFront(root);   // 打开时提层一次即可，不要每帧抢置顶
+
+// 面板：统一外壳 + 拖动夹取
+var frame = PanelFrame.Create(transform, "MyPanelBody", 420f, 520f,
+    PanelAnchor.LeftEdge, "我的面板", Close);
+
+// 物品选择器：只显示指定物品（policy 里还可要求已解锁 / 隐藏「改版建筑」页签）
+ItemPickerFilter.Begin(ids, new ItemPickerPolicy { RequireUnlocked = false, IncludeUnpaged = true });
+
+// 旁车生命周期：注册命名空间后统一安装读/写/重置钩子
+SaveLifecycle.Register("MyMod", Reset, OnLoaded, null, AfterLoad);
+SaveLifecycle.Install();
 
 // 性能面板：注册模块与子步骤，Measure() 之外的时间不计入
 var module = ModProfiler.RegisterModule("模组 MyMod");
