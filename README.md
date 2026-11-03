@@ -7,6 +7,7 @@
 | [DSPEasy Framework](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Framework/) | 其它 DSPEasy 模组共用的框架：按命名空间隔离的旁车存档、面板基座、配方求解等。本身不含玩法 | BepInEx 5.4.17 |
 | [DSPEasy Buildings](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Buildings/) | 11 座独立于原版的超级建筑：采矿机、制造机、充电桩、发电机、炮台、传送带、分拣器、研究站、黑箱超市、电磁-火箭发射器、太空防卫站；物品与配方集中在「改版建筑」页与「改版」类别；支持 0-6 套可配置游玩模式配方 | BepInEx 5.4.17 + DSPEasy Framework |
 | [DSPEasy Exchange](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Exchange/) | EMC 交易面板：卖物品换 EMC、用 EMC 买已解锁物品；全物品按资源基价 + 配方推导定价，账户与解锁随存档保存 | BepInEx 5.4.17 + DSPEasy Framework |
+| [DSPEasy Starport](https://thunderstore.io/c/dyson-sphere-program/p/Suntion/DSPEasy_Starport/) | 在恒星轨道上建造可进入的星港：站内可铺原版与 DSPEasy Buildings 的建筑；F9 面板管理建站、子站投放、升级、传送与星门跃迁；自带太阳能、储能、护盾与磁化电浆炮 | BepInEx 5.4.17 + DSPEasy Framework |
 
 > **这不是源码仓库。** 模组本体闭源，这里只放**发布用的包文件**（DLL、图标、manifest、包页 README）和**问题反馈入口**。
 
@@ -19,20 +20,21 @@
 
 ## 安装
 
-推荐用 **r2modman** 或 **Thunderstore Mod Manager**（[下载](https://get.thunderstore.io/)）：选 `Dyson Sphere Program` 社区，搜 `DSPEasy`，装任一玩法包（`DSPEasy Buildings` / `DSPEasy Exchange`）时会把 Framework 和 BepInEx 一起装上。只想要交易面板的话可以不装 Buildings，Exchange 只依赖 Framework。
+推荐用 **r2modman** 或 **Thunderstore Mod Manager**（[下载](https://get.thunderstore.io/)）：选 `Dyson Sphere Program` 社区，搜 `DSPEasy`，装任一包（`DSPEasy Buildings` / `DSPEasy Exchange` / `DSPEasy Starport`）时会把 Framework 和 BepInEx 一起装上。只想要交易面板的话可以只装 Exchange，它只依赖 Framework。
 
 手动安装：
 
 1. 装 **BepInEx 5.4.17（x64，Mono）**——游戏是 Unity Mono 运行时，**不要**装 IL2CPP 版。
-2. 三个包各解到一个自己的文件夹里，不要直接摊在 `plugins/` 根下：
+2. 四个包各解到一个自己的文件夹里，不要直接摊在 `plugins/` 根下：
 
    ```text
    BepInEx/plugins/DSPEasy_Framework/DSPEasy.Framework.dll
    BepInEx/plugins/DSPEasy.Buildings/DSPEasy.Buildings.dll
    BepInEx/plugins/DSPEasy.Exchange/DSPEasy.Exchange.dll
+   BepInEx/plugins/DSPEasy.Starport/DSPEasy.Starport.dll
    ```
 
-3. 启动游戏，打开 `BepInEx/LogOutput.log`，能看到 `DSPEasy.Buildings` 与 `DSPEasy.Exchange`（按装了哪些算）两个插件加载成功、Framework 作为依赖被它们加载即可。
+3. 启动游戏，打开 `BepInEx/LogOutput.log`，能看到 `DSPEasy.Buildings`、`DSPEasy.Exchange`、`DSPEasy.Starport`（按装了哪些算）加载成功、Framework 作为依赖被它们加载即可。
 
 > ⚠️ **`BepInEx/plugins/` 下只能有一份 `DSPEasy.Framework.dll`。**
 > BepInEx 会递归加载所有 DLL，每一份都会建立自己的静态注册表；有了两份，一份写进去的存档数据另一份读不到，表现就是「设置存了，重进游戏全没了」。升级时把旧副本删干净。
@@ -72,7 +74,8 @@ BepInEx 日志：    BepInEx/LogOutput.log（整份贴，别只贴最后一行�
 - 只支持 64 位 Windows + Mono 版 BepInEx。
 - 存档设置写在存档旁边的 `<存档名>.mod.dat` 里，**不进 `.dsv`**。备份或迁移存档时请把 `.dsv` 与 `.mod.dat` 成对复制。
 - 建筑设置会随原版蓝图一起保存；**对方没装本模组时粘贴蓝图会丢建筑或报错**，这是已知限制。
-- Buildings 与 Exchange 的设置各写在自己的旁车块（`DSPEasyBuildings` 命名空间 vs `EMC1`），同装互不覆盖；Exchange 只读原版物品 / 配方表，不改原版数值。
+- Buildings、Exchange 与 Starport 的设置写在同一旁车文件的不同命名空间（`DSPEasy.Buildings`、`DSPEasy.Exchange` 的 `EMC1` 块、`DSPEasy.Starport` 的 `STAT` 块），同装互不覆盖；旧命名空间（`DSPEasyBuildings` / `DSPEasyExchange`）的存档读取时自动兼容。Exchange 只读原版物品 / 配方表，不改原版数值。
+- 星港不出现在原版行星列表，也不参与原版航行/着陆流程；进出站用 F9 面板的「传送到选中」。甲板是单面碰撞体，从侧面/下方可能穿模。
 - Buildings 默认占用 `11500`–`11510` 物品段与科技 `1999`，撞号时可在 `BepInEx/config/DSPEasy.Buildings.cfg` 里改；配方 ID 自动找空位，冲突时请发日志。配方另可在同文件 `[游玩模式] 方案` 里选 `0`–`6`（默认 `5`）。
 
 ## 许可

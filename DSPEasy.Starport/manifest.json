@@ -1,0 +1,10 @@
+{
+    "name": "DSPEasy_Starport",
+    "version_number": "0.0.1",
+    "website_url": "https://github.com/SunYanbox/DSPModPublish",
+    "description": "在恒星轨道上建造可进入的星港：站内可铺原版与 DSPEasy Buildings 的建筑，F9 面板管理建站、子站投放、升级、传送与星门跃迁；自带太阳能、储能、护盾与磁化电浆炮。需要 DSPEasy_Framework。",
+    "dependencies": [
+        "xiaoye97-BepInEx-5.4.17",
+        "Suntion-DSPEasy_Framework-0.2.35"
+    ]
+}

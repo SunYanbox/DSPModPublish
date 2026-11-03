@@ -11,6 +11,9 @@
     },
     "DSPEasy.Exchange": {
       "categories": ["quality-of-life", "resources"]
+    },
+    "DSPEasy.Starport": {
+      "categories": ["transportation", "logistics"]
     }
   }
 }
